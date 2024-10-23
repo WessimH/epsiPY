@@ -1,6 +1,5 @@
-import time
-
 import pytest
+
 from reponse import *
 
 
@@ -77,8 +76,7 @@ def test_exercise_7():
 
 # Exercice 8: Décorateurs avec Paramètres
 def test_exercise_8():
-
-    @timeout_limit(1)
+    @timeout_limit(timeout=1)
     def t():
         time.sleep(2)
     with pytest.raises(TimeoutError):
