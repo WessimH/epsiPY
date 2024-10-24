@@ -1,7 +1,5 @@
-import pytest
-
 from reponse import *
-
+import pytest
 
 # Exercice 1: Classe Abstraite Simple
 def test_exercise_1():
@@ -76,7 +74,7 @@ def test_exercise_7():
 
 # Exercice 8: Décorateurs avec Paramètres
 def test_exercise_8():
-    @timeout_limit(timeout=1)
+    @timeout_limit(1)
     def t():
         time.sleep(2)
     with pytest.raises(TimeoutError):
@@ -84,7 +82,7 @@ def test_exercise_8():
 
 
 def test_exercise_8_bonus():
-    @timeout_limit(1, raise_exception=True)
+    @timeout_limit(1, True)
     def t():
         time.sleep(2)
 
