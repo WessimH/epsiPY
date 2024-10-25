@@ -4,7 +4,7 @@ Ce TP est composé de plusieurs exercices indépendants pour vous familiariser a
 
 ## Exercice 1 : Création de Threads
 
-Créez une fonction `exo1(k: int) -> list[str]` qui crée `k` threads différents. Chaque thread doit ajouter son identifiant (thread ID) à une liste partagée. La fonction doit retourner cette liste après que tous les threads aient terminé leur exécution.
+Créez une fonction `exo1(k: int) -> list[str]` qui crée `k` threads différents. Chaque thread doit ajouter son nom (thread.name) à une liste partagée. La fonction doit retourner cette liste après que tous les threads aient terminé leur exécution.
 
 ---
 
