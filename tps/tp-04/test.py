@@ -1,5 +1,3 @@
-import multiprocessing
-import threading
 from unittest import mock
 
 import pytest
@@ -63,3 +61,12 @@ async def test_exo_3():
     max_time = max(times)
     min_time = min(times)
     assert max_time - min_time < 1, "Les temps de début doivent être très proches (moins d'une seconde d'écart)"
+
+
+def test_exo_4():
+    pool = ProcessPool(3)
+    with pool as queue:
+        for i in range(100):
+            queue.put(i)
+
+    assert len(pool.get_results()) == 100  # Vérifie que 100 résultats ont été produits
