@@ -1,7 +1,7 @@
 import asyncio
+from concurrent.futures.process import ProcessPoolExecutor
 from dataclasses import dataclass
 from multiprocessing.pool import Pool
-from typing import Any
 
 import aiohttp
 import bloom_filter
@@ -18,24 +18,29 @@ class Page:
     links: list[str]
 
 
-class Crawler:
+def parse(url: str, html: str) -> Page:
+    soup = bs4.BeautifulSoup(html, 'html.parser')
+    all_links: ResultSet[Tag] = soup.find_all("a")
+    final_links: list[str] = []
 
-    def __init__(self, pool: Pool):
-        self.queue = asyncio.Queue()  # Input
-        self.history = set()
-
-    async def parse(self, url: str, html: str) -> Page:
-        soup = bs4.BeautifulSoup(html)
-        all_links: ResultSet[Tag] = soup.find_all("a")
-        final_links: list[str] = []
-
-        link: Tag
-        for link in all_links:
-            href = link.attrs.get("href", None)
-            href = urljoin(url, href)
+    for link in all_links:
+        href = link.attrs.get("href", None)
+        href = urljoin(url, href)
+        if "http" in href:
             final_links.append(str(href))
 
-        return Page(url, soup.title, soup.body, final_links)
+    page = Page(url, str(soup.title),
+                str(soup.body.get_text()) if soup.body else '', final_links)
+    return page
+
+
+class Crawler:
+
+    def __init__(self, pool: ProcessPoolExecutor):
+        self.queue = asyncio.Queue()  # Input
+        self.history = set()
+        self.pool = pool
+        self.loop = asyncio.get_running_loop()
 
     async def fetch(self, url: str) -> Page:
         async with aiohttp.ClientSession() as session:
@@ -44,8 +49,10 @@ class Crawler:
                 print("Content-type:", response.headers['content-type'])
 
                 html = await response.text()
-                print("Body:", html[:15], "...")
-                return await self.parse(url, html)
+
+                # Parse the HTML in an executor
+                page = await self.loop.run_in_executor(self.pool, parse, url, html)
+                return page
 
     async def worker(self):
         while True:
@@ -63,9 +70,9 @@ class Crawler:
 async def start(pool: Pool):
     crawler = Crawler(pool)
     await crawler.queue.put("https://fr.wikipedia.org/")
-    await crawler.worker()
+    await asyncio.gather(*[crawler.worker() for _ in range(10)])
 
 
 if __name__ == '__main__':
-    pool = Pool(4)
-    asyncio.run(start(pool))
+    with ProcessPoolExecutor(4) as pool:
+        asyncio.run(start(pool))
