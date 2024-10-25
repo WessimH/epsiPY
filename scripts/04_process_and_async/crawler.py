@@ -26,7 +26,7 @@ def parse(url: str, html: str) -> Page:
     for link in all_links:
         href = link.attrs.get("href", None)
         href = urljoin(url, href)
-        if "http" in href:
+        if href.startswith("http"):
             final_links.append(str(href))
 
     page = Page(url, str(soup.title),
