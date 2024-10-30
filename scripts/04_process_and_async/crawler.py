@@ -2,16 +2,23 @@ import asyncio
 from concurrent.futures.process import ProcessPoolExecutor
 from dataclasses import dataclass
 from multiprocessing.pool import Pool
-
-import aiohttp
-import bloom_filter
-import bs4
-from bs4 import ResultSet, Tag
 from urllib.parse import urljoin
 
+import aiohttp
+import bs4
+from bs4 import ResultSet, Tag
+
+"""
+To run this script:
+pip install aiohttp beautifulsoup4
+"""
 
 @dataclass
 class Page:
+    """
+    This object will store every data related to a page. Using @dataclass allows us to not worry
+     about constructor/serialization
+    """
     url: str
     title: str
     body: str
@@ -19,6 +26,16 @@ class Page:
 
 
 def parse(url: str, html: str) -> Page:
+    """
+    Parse raw html to extract links.
+    Links are then solved (relative -> absolute), and filtered (we do not want anchor <a> in our list)
+
+    Note: This method isn't in the Crawler object so it instance won't be serialized (as we are
+    using multiprocessing for this function)
+    :param url: the absolute url of the current page
+    :param html: the raw htlm text
+    :return: a Page object
+    """
     soup = bs4.BeautifulSoup(html, 'html.parser')
     all_links: ResultSet[Tag] = soup.find_all("a")
     final_links: list[str] = []
