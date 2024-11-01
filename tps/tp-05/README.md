@@ -27,7 +27,6 @@ Vous êtes libres d’utiliser une base de données (comme SQLite ou Postgres) o
 - **Route** : `GET /miscellaneous/addition`
     - **Description** : Prend deux paramètres `a` et `b` via des [query parameters](https://fastapi.tiangolo.com/tutorial/query-params/#query-parameters) et retourne leur somme.
     - **Exigences** : `a` et `b` doivent être des nombres, et la route doit gérer les erreurs de type si les paramètres fournis ne sont pas valides.
-    - **Points** : 1 pt
 
 ### Partie 2 : Gestion des Utilisateurs et Authentification
 
@@ -45,7 +44,6 @@ Une fois la première partie terminée, vous allez étendre l'API pour gérer un
       }
       ```
     - **Exigences** : Vérifier l'unicité du nom d'utilisateur pour éviter les doublons.
-    - **Points** : 2 pts
 
 - **Route** : `POST /token` et `GET /users/me`
     - **Description** : Utiliser [OAuth2 et JWT](https://fastapi.tiangolo.com/tutorial/security/oauth2-jwt) pour sécuriser les routes utilisateur. Consultez aussi [ce guide d'introduction](https://fastapi.tiangolo.com/tutorial/security/) pour une vue d'ensemble.
@@ -53,7 +51,6 @@ Une fois la première partie terminée, vous allez étendre l'API pour gérer un
         - `POST /token` doit gérer l'authentification via JWT.
         - `GET /users/me` doit retourner uniquement le nom de l'utilisateur et le nombre de TODO enregistrés.
         - Les routes TODO doivent être accessibles uniquement aux utilisateurs authentifiés ; sinon, une réponse 401 doit être renvoyée.
-    - **Points** : 3 pts
 
 #### Routes de Gestion des TODO
 
@@ -72,7 +69,6 @@ Les routes suivantes doivent permettre aux utilisateurs de gérer leurs listes T
     - **Exigences** :
         - Chaque TODO doit être attribué à un ID unique.
         - La priorité doit permettre de trier les TODO dans les requêtes de récupération.
-    - **Points** : 2 pts
 
 - **Route** : `GET /users/me/todo`
     - **Description** : Retourne tous les TODO de l'utilisateur, triés par priorité (de la plus petite à la plus grande).
