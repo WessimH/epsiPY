@@ -109,3 +109,7 @@ pip install pytest httpx
 Le fichier de test sera disponible le jour du TP.
 Néanmoins, vous pouvez tester votre projet avec le fichier test.http (utilisable via PyCharm/Intellij).
 
+## Avant de commencer
+
+Le projet se base énormément sur la documentation de FastAPI, prenez le temps de bien lire celle-ci.
+Commencez simple, gardez l'authentification pour la fin si vous n'êtes pas à l'aise.
