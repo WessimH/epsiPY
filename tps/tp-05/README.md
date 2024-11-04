@@ -113,3 +113,22 @@ Néanmoins, vous pouvez tester votre projet avec le fichier test.http (utilisabl
 
 Le projet se base énormément sur la documentation de FastAPI, prenez le temps de bien lire celle-ci.
 Commencez simple, gardez l'authentification pour la fin si vous n'êtes pas à l'aise.
+
+## FAQ
+
+### Où coder le projet
+
+Cloner ce repository, et codez à partir de ce qui est présent dans tp-05.
+Donc, commencez à partir d'app.py
+
+### Mes imports ne marchent pas
+
+![Image](./res/img.png)
+
+### Comment lancer le projet via le terminal 
+
+```shell
+pip install uvicorn
+# depuis le dossier tp-05
+uvicorn --reload api:app
+```
