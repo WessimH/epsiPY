@@ -130,5 +130,5 @@ Donc, commencez à partir d'app.py
 ```shell
 pip install uvicorn
 # depuis le dossier tp-05
-uvicorn --reload api:app
+uvicorn --reload api.app:app
 ```

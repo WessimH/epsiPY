@@ -68,14 +68,17 @@ def test_auth_and_get_user(username, password):
 
 # Tests pour l'ajout de TODO
 @pytest.mark.feature("TODO Management")
-@pytest.mark.parametrize("todo_data", [
-    {"name": "Acheter du lait", "description": "Aller au supermarché", "priority": 1},
+@pytest.mark.parametrize("todo_data,auth", [
+    ({"name": "Acheter du lait", "description": "Aller au supermarché", "priority": 1}, False),
+    ({"name": "Acheter du lait", "description": "Aller au supermarché", "priority": 1}, True),
 ])
-def test_add_todo(todo_data):
+def test_add_todo(todo_data, auth):
     global score
-    response = client.post("/token", data={"username": "user1", "password": "password123"})
-    token = response.json().get("access_token")
-    headers = {"Authorization": f"Bearer {token}"}
+    headers = {}
+    if auth:
+        response = client.post("/token", data={"username": "user1", "password": "password123"})
+        token = response.json().get("access_token")
+        headers = {"Authorization": f"Bearer {token}"}
 
     response = client.post("/users/me/todo", json=todo_data, headers=headers)
     assert response.status_code == 201
@@ -85,11 +88,14 @@ def test_add_todo(todo_data):
 
 # Tests pour la récupération des TODO triés
 @pytest.mark.feature("TODO Retrieval")
-def test_get_todo_list():
+@pytest.mark.parametrize("auth", [True, False])
+def test_get_todo_list(auth):
     global score
-    response = client.post("/token", data={"username": "user1", "password": "password123"})
-    token = response.json().get("access_token")
-    headers = {"Authorization": f"Bearer {token}"}
+    headers = {}
+    if auth:
+        response = client.post("/token", data={"username": "user1", "password": "password123"})
+        token = response.json().get("access_token")
+        headers = {"Authorization": f"Bearer {token}"}
 
     response = client.get("/users/me/todo", headers=headers)
     assert response.status_code == 200
@@ -101,17 +107,25 @@ def test_get_todo_list():
 
 # Tests pour la modification des TODO
 @pytest.mark.feature("TODO Update")
-@pytest.mark.parametrize("todo_data, updated_data", [
+@pytest.mark.parametrize("todo_data, updated_data, auth", [
     (
             {"name": "Acheter du lait", "description": "Aller au supermarché", "priority": 1},
-            {"name": "Acheter du lait", "description": "Aller au supermarché", "priority": 20}
+            {"name": "Acheter du lait", "description": "Aller au supermarché", "priority": 20},
+            True
+    ),
+    (
+            {"name": "Acheter du lait", "description": "Aller au supermarché", "priority": 1},
+            {"name": "Acheter du lait", "description": "Aller au supermarché", "priority": 20},
+            False
     )
 ])
-def test_update_todo(todo_data, updated_data):
+def test_update_todo(todo_data, updated_data, auth):
     global score
-    response = client.post("/token", data={"username": "user1", "password": "password123"})
-    token = response.json().get("access_token")
-    headers = {"Authorization": f"Bearer {token}"}
+    headers = {}
+    if auth:
+        response = client.post("/token", data={"username": "user1", "password": "password123"})
+        token = response.json().get("access_token")
+        headers = {"Authorization": f"Bearer {token}"}
 
     response = client.post("/users/me/todo", json=todo_data, headers=headers)
     todo_id = response.json()["id"]
